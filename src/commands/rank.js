@@ -3,7 +3,8 @@ const axios = require("axios");
 module.exports = async (bot) => {
   bot.command(["rank"], async (ctx) => {
     try {
-      const response = await axios(process.env.API_REQ);
+      const requestURL = process.env.API_REQ+process.env.USERS+process.env.API_KEY;
+      const response = await axios(requestURL);
       const data = response.data.result;
       data.sort((a, b) => {
         if (!a.rating) return 1;
@@ -12,6 +13,7 @@ module.exports = async (bot) => {
       });
       ctx.session.group_data = data;
     } catch (error) {
+      await ctx.reply("Something went wrong when fetching data")
       console.log("Something went wrong when fetching data");
       console.log(error);
     }
