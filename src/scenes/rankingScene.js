@@ -3,7 +3,7 @@ const { users } = require("../data/config");
 
 const displayRanking = async (index, ctx, first) => {
   const group_data = ctx.session.group_data;
-  const last_index = group_data.length - 1;
+  const last_index = group_data?.length - 1;
   const rankMessage = [];
 
   for (let i = index; i < index + 5; i++) {
