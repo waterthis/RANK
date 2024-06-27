@@ -23,8 +23,6 @@ bot.use((ctx, next) => {
 	next();
 });
 
-
-
 stage.register(ratingScene);
 stage.register(rankingScene);
 bot.use(stage.middleware());
