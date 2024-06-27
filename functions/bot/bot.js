@@ -1,7 +1,14 @@
 require("dotenv").config();
 const { Telegraf, Scenes, session } = require("telegraf");
 const stage = new Scenes.Stage();
-const bot = new Telegraf(process.env.BOT_TOKEN);
+let bot;
+
+if (process.env.MODE === "development"){
+  bot = new Telegraf(process.env.TEST_BOT_TOKEN);
+}
+else{
+  bot = new Telegraf(process.env.BOT_TOKEN);
+}
 const ratingScene = require("../../src/scenes/ratingScene.js");
 const rankingScene = require("../../src/scenes/rankingScene.js");
 
@@ -10,6 +17,12 @@ bot.use(
     defaultSession: () => ({}),
   })
 );
+
+bot.use((ctx, next) => {
+	console.log(ctx?.update?.update_id,ctx?.update?.message?.from?.username,ctx?.update?.message?.text);
+	next();
+});
+
 
 
 stage.register(ratingScene);
@@ -35,19 +48,22 @@ async function start_bot() {
   }
 }
 
-// try {
-//        start_bot();
-// } catch (error) {
-//     console.log("Bot Restarted");
-//     console.log(error);
-// }
-
-exports.handler = async event => {
+if (process.env.MODE === "development"){
   try {
-    await bot.handleUpdate(JSON.parse(event.body))
-    return { statusCode: 200, body: "" }
-  } catch (e) {
-    console.error("error in handler:", e)
-    return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
+         start_bot();
+  } catch (error) {
+      console.log("Bot Restarted");
+      console.log(error);
+  }
+}
+else{
+  exports.handler = async event => {
+    try {
+      await bot.handleUpdate(JSON.parse(event.body))
+      return { statusCode: 200, body: "" }
+    } catch (e) {
+      console.error("error in handler:", e)
+      return { statusCode: 400, body: "This endpoint is meant for bot and telegram communication" }
+    }
   }
 }

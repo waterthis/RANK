@@ -28,7 +28,7 @@ module.exports = (bot) => {
           .digest("hex");
 
         const userRequestURL = `${process.env.API_REQ}${sortedParamString}&apiSig=${randomNumber}${shaEncode}`;
-        console.log(userRequestURL);
+        // console.log(userRequestURL);
         const userResponse = await axios(userRequestURL);
         // console.log(userResponse);
 
