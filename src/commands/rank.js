@@ -13,7 +13,12 @@ module.exports = async (bot) => {
       });
       ctx.session.group_data = data;
     } catch (error) {
-      await ctx.reply("Something went wrong when fetching data")
+      try {
+        await ctx.reply("Something went wrong when fetching data")
+      } catch (error) {
+        console.log("Something went wrong when replying to user");  
+        console.log(error.message)
+      }
       console.log("Something went wrong when fetching data");
       console.log(error);
     }
